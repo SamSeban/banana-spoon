@@ -20,7 +20,7 @@
         <a href="new-student.html" id="new-student-btn" class="button mb-3" data-lang="new_student_btn_text" data-lang-type="text"></a>
         <div>
             <button id="started-degree-btn" class="button mb-3" onclick="showInput()" data-lang="started_degree_btn_text" data-lang-type="text"></button>
-            <textarea id="courses-input" class="transparent-input d-none" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
+            <textarea id="courses-input" class="transparent-input d-none" rows="5" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
             <button id="submit-btn" class="submit-btn button d-none" onclick="submitCourses()" data-lang="submit_btn_text" data-lang-type="text"></button>
         </div>
     </div>
@@ -70,8 +70,14 @@
     function submitCourses() {
         let toParse = document.getElementById("courses-input").value;
         parsedData = parseTranscript(toParse);
-        console.log(parsedData);
+        
+        // Store parsedData in localStorage
+        localStorage.setItem('parsedData', JSON.stringify(parsedData));
+
+        // Redirect to cursus.html
+        window.location.href = 'cursus.html';
     }
+
     // Initialize Language
     updateLanguage();
 </script>

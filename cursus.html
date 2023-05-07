@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Banana Spoon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/lang.js"></script>
+    <script src="js/parse.js"></script>
+</head>
+<body>
+    <div class="bg">
+    <p id="parsed-data-display" style="color: white;"></p>
+    </div>
+    <script>
+        // Retrieve parsedData from localStorage and display it
+        function displayParsedData() {
+            const parsedData = JSON.parse(localStorage.getItem('parsedData'));
+ //           document.getElementById('parsed-data-display').textContent = JSON.stringify(parsedData, null, 2);
+            let display = document.getElementById('parsed-data-display');
+            display.innerHTML = "Your name: " + parsedData['student-name']
+            + "<br>Your faculty: " + parsedData['faculty']
+            + "<br>Your diploma: " + parsedData['diploma']
+            + "<br>Your GPA: " + parsedData['gpa'];
+        }
+
+        displayParsedData();
+    </script>
+</body>
+</html>
