@@ -1,9 +1,78 @@
-<html>
-    <head>
-        <title>Banana Spoon</title>
-        <script src="script.js"></script>
-    </head>
-    <body>
-    Capucine Sam
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Banana Spoon</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/lang.js"></script>
+    <script src="js/parse.js"></script>
+</head>
+<body>
+<div class="bg">
+    <div class="button-group">
+        <a href="new-student.html" id="new-student-btn" class="button mb-3" data-lang="new_student_btn_text" data-lang-type="text"></a>
+        <div>
+            <button id="started-degree-btn" class="button mb-3" onclick="showInput()" data-lang="started_degree_btn_text" data-lang-type="text"></button>
+            <textarea id="courses-input" class="transparent-input d-none" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
+            <button id="submit-btn" class="submit-btn button d-none" onclick="submitCourses()" data-lang="submit_btn_text" data-lang-type="text"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Language Switcher Button -->
+<img data-lang="lang_switcher_img_src" data-lang-type="img" class="lang-switcher" onclick="toggleLanguage()">
+
+<!-- Scripts -->
+<script>
+    // Default Language is English
+    var lang = "en";
+
+    // Function to toggle language
+    function toggleLanguage() {
+        lang = (lang === "en") ? "he" : "en";
+        updateLanguage();
+    }
+
+    // Function to update language
+    function updateLanguage() {
+        var elements = document.querySelectorAll("[data-lang]");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var key = element.getAttribute("data-lang");
+            var type = element.getAttribute("data-lang-type");
+
+            if (type === "text") {
+                element.textContent = langStrings[lang][key];
+            } else if (type === "placeholder") {
+                element.placeholder = langStrings[lang][key];
+            } else if (type === "img") {
+                element.src = langStrings[lang][key];
+            }
+        }
+    }
+
+    // Function to show/hide input field
+    function showInput() {
+        var input = document.querySelector(".transparent-input");
+        input.classList.toggle("d-none");
+        var submit = document.querySelector(".submit-btn");
+        submit.classList.toggle("d-none");
+    }
+
+    // Function to submit courses
+    function submitCourses() {
+        let toParse = document.getElementById("courses-input").value;
+        parsedData = parseTranscript(toParse);
+        console.log(parsedData);
+    }
+    // Initialize Language
+    updateLanguage();
+</script>
+</body>
 </html>
