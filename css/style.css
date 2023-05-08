@@ -34,6 +34,7 @@
     border-bottom: 1px solid white;
     width: 100%;
     resize: none;
+    direction: rtl;
   }
 
 .transparent-input::placeholder {
@@ -54,4 +55,16 @@
     right: 10px;
     cursor: pointer;
     z-index: 9999;
+}
+
+.slide {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease-in-out, max-height 0.2s ease-in-out;
+}
+
+.slide.show {
+  opacity: 1;
+  max-height: 200px;
 }

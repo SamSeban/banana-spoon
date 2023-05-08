@@ -20,8 +20,8 @@
         <a href="new-student.html" id="new-student-btn" class="button mb-3" data-lang="new_student_btn_text" data-lang-type="text"></a>
         <div>
             <button id="started-degree-btn" class="button mb-3" onclick="showInput()" data-lang="started_degree_btn_text" data-lang-type="text"></button>
-            <textarea id="courses-input" class="transparent-input d-none" rows="5" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
-            <button id="submit-btn" class="submit-btn button d-none" onclick="submitCourses()" data-lang="submit_btn_text" data-lang-type="text"></button>
+            <textarea id="courses-input" class="transparent-input slide" rows="5" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
+            <button id="submit-btn" class="submit-btn button slide" onclick="submitCourses()" data-lang="submit_btn_text" data-lang-type="text"></button>
         </div>
     </div>
 </div>
@@ -61,9 +61,9 @@
     // Function to show/hide input field
     function showInput() {
         var input = document.querySelector(".transparent-input");
-        input.classList.toggle("d-none");
+        input.classList.toggle("show");
         var submit = document.querySelector(".submit-btn");
-        submit.classList.toggle("d-none");
+        submit.classList.toggle("show");
     }
 
     // Function to submit courses
