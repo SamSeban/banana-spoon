@@ -20,6 +20,7 @@
         <a href="new-student.html" id="new-student-btn" class="button mb-3" data-lang="new_student_btn_text" data-lang-type="text"></a>
         <div>
             <button id="started-degree-btn" class="button mb-3" onclick="showInput()" data-lang="started_degree_btn_text" data-lang-type="text"></button>
+            <p data-lang="instructions" data-lang-type="inner" class="instructions slide">Go on the <a href="https://students.technion.ac.il/local/tcurricular/grades" target="_blank">students website</a>, select the entire page using CTRL+A and paste it in the textbox below.</p>
             <textarea id="courses-input" class="transparent-input slide" rows="5" data-lang="courses_input_placeholder" data-lang-type="placeholder"></textarea>
             <button id="submit-btn" class="submit-btn button slide" onclick="submitCourses()" data-lang="submit_btn_text" data-lang-type="text"></button>
         </div>
@@ -52,8 +53,13 @@
                 element.textContent = langStrings[lang][key];
             } else if (type === "placeholder") {
                 element.placeholder = langStrings[lang][key];
+                element.style.direction = langStrings[lang]["text_direction"]
             } else if (type === "img") {
                 element.src = langStrings[lang][key];
+            } else if (type === "inner") {
+                element.innerHTML = langStrings[lang][key];
+                element.style.direction = langStrings[lang]["text_direction"]
+                element.style.textAlign = langStrings[lang]["text_align"]
             }
         }
     }
@@ -64,6 +70,8 @@
         input.classList.toggle("show");
         var submit = document.querySelector(".submit-btn");
         submit.classList.toggle("show");
+        var paragraph = document.querySelector(".instructions");
+        paragraph.classList.toggle("show");
     }
 
     // Function to submit courses
