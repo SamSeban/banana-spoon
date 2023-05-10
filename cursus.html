@@ -11,23 +11,27 @@
           crossorigin="anonymous">
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/lang.js"></script>
+    <script src="js/lag.js"></script>
     <script src="js/parse.js"></script>
 </head>
 <body>
     <div class="bg">
-    <p id="parsed-data-display" style="color: white;"></p>
+    <p id="parsed-data-display" style="color: white; text-align: right; direction: rtl;"></p>
     </div>
     <script>
         // Retrieve parsedData from localStorage and display it
         function displayParsedData() {
             const parsedData = JSON.parse(localStorage.getItem('parsedData'));
- //           document.getElementById('parsed-data-display').textContent = JSON.stringify(parsedData, null, 2);
             let display = document.getElementById('parsed-data-display');
-            display.innerHTML = "Your name: " + parsedData['student-name']
-            + "<br>Your faculty: " + parsedData['faculty']
-            + "<br>Your diploma: " + parsedData['diploma']
-            + "<br>Your GPA: " + parsedData['gpa'];
+            display.innerHTML += "<b>"+ parsedData["student-name"] +"</b><br><br>"
+            for (let i in parsedData["semesters"]) {
+                let semester = parsedData["semesters"][i];
+                display.innerHTML += "<b>" + semester["semester-name"] + "</b><br>";
+                for (let j in semester["courses"]) {
+                    display.innerHTML += semester["courses"][j]["course-name"] + "<br>";
+                }
+            }
+
         }
 
         displayParsedData();
