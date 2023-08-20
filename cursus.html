@@ -16,20 +16,23 @@
     <script src="js/parse.js"></script>
 </head>
 <body>
-    <div class="bg">
-        <h3>מקצועות החובה</h3>
-        <div class="flex-div">
-            <div id="req-missing-display" style="color: white; text-align: right; direction: rtl;">
-                <h3>קורסים חסרים</h3>
-                <ul id="req-missing-list"></ul>
-            </div>
-            <div id="req-taken-display" style="color: white; text-align: right; direction: rtl;">
-                <h3>קורסים שלקחת</h3>
-                <ul id="req-taken-list"></ul>
-            </div>
+    <h3>מקצועות החובה</h3>
+    <div class="flex-div">
+        <div id="req-missing-display" style="color: white; text-align: right; direction: rtl;">
+            <h3>קורסים חסרים</h3>
+            <ul id="req-missing-list"></ul>
         </div>
-    </div>    
+        <div id="req-taken-display" style="color: white; text-align: right; direction: rtl;">
+            <h3>קורסים שלקחת</h3>
+            <ul id="req-taken-list"></ul>
+        </div>
+    </div>
+    <h3>מגמות</h3> 
+    <div id="container"></div>
+    <div id="major-courses"></div>
     <script>
+        let major = null;
+
         function getCourseName(array, courseNumber) {
             for (let i = 0; i < array.length; i++) {
                 if (array[i][0] === courseNumber) {
@@ -112,6 +115,42 @@
             }
         }
 
+        function pickMajor(data, faculties, majors) {
+            let faculty = data["faculty"];
+            if (faculties.includes(faculty)) {
+                let facID = faculties.indexOf(faculty);
+                let container = document.getElementById('container');
+                container.innerHTML = ''; // Clear the container
+
+                for (let i = 0; i < majors[facID].length; i++) {
+                    let btn = document.createElement('button');
+                    btn.className = 'btn btn-primary mr-2'; // Add Bootstrap classes
+                    btn.id = 'btn' + (i + 1);
+                    btn.innerText = majors[facID][i];
+                    btn.onclick = function() {
+                        toggleButtons(btn.id, majors[facID][i]);
+                    };
+                    container.appendChild(btn);
+                }
+            }
+        }
+
+        function displayMajor() {
+            let majorContainer = document.getElementById('major-courses');
+            majorContainer.innerHTML = 'Work in progress...';
+        }
+
+        function toggleButtons(buttonId, majorName) {
+            const container = document.getElementById('container');
+            const buttons = container.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = buttons[i].id !== buttonId;
+            }
+            major = majorName;
+            displayMajor();
+        }
+
+
         const MErequired = [
             {"course-number": "104018", "semester": ["winter"]},
             {"course-number": "104016", "semester": ["winter"]},
@@ -149,7 +188,11 @@
             {"course-number": "034039", "semester": ["winter"]}
         ];
 
+        const MEmajors = ["רובוטיקה"];
+
         const required = [MErequired];
+        const majors = [MEmajors];
+
         const faculties = ["הנדסת מכונות"];
         const parsedData = JSON.parse(localStorage.getItem('parsedData'));
 
@@ -158,6 +201,7 @@
             courses = Object.keys(json).map((key) => [key, json[key]]);
             checkCatalog(parsedData, faculties, courses, required);
         });
+        pickMajor(parsedData, faculties, majors)
     </script>
 </body>
 </html>

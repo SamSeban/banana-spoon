@@ -1,3 +1,9 @@
+body {
+  background: linear-gradient(to top right, #4b6cb7, #182848);
+  color: white;
+  text-align: center;
+}
+
 .button {
     text-align: center;
     border-radius: 0.3em;
@@ -12,23 +18,18 @@
     width: 100%;
   }
 
-  .button:hover {
+.button:hover {
     text-decoration: none;
     color: black;
     background: rgba(255,255,255,1);
-  }
+}
 
-  .flex-div {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .bg {
-    background: linear-gradient(to top right, #4b6cb7, #182848);
-    color: white;
-    text-align: center;
-  }
+.flex-div {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .transparent-input {
     background-color: transparent !important;
