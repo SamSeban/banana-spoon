@@ -10,7 +10,6 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous">
         <!-- Custom Stylesheet -->
-        <link rel="stylesheet" href="css/style.css">
         <script src="js/lang.js"></script>
         <script src="js/parse.js"></script>
     </head>
@@ -89,5 +88,77 @@
             // Initialize Language
             updateLanguage();
         </script>
+        <style>
+            .button {
+                text-align: center;
+                border-radius: 0.3em;
+                content: '';
+                background: rgba(255,255,255,0.9);
+                padding: 0.5em 1em;
+                font-size: 1.2em;
+                border: none;
+                outline: none;
+                color: black;
+                mix-blend-mode: lighten;
+                width: 100%;
+            }
+
+            .button:hover {
+                text-decoration: none;
+                color: black;
+                background: rgba(255,255,255,1);
+            }
+
+            .bg {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(to top right, #4b6cb7, #182848);
+                color: white;
+            }
+
+            .transparent-input {
+                background-color: transparent !important;
+                color: white;
+                border: none;
+                outline: none;
+                border-bottom: 1px solid white;
+                width: 100%;
+                resize: none;
+            }
+
+            .transparent-input::placeholder {
+                color: white;
+            }
+
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                max-width: 300px;
+            }
+
+            /* Language switcher button */
+            .lang-switcher {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                z-index: 9999;
+            }
+
+            .slide {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.2s ease-in-out, max-height 0.2s ease-in-out;
+            }
+
+            .slide.show {
+            opacity: 1;
+            max-height: 200px;
+            }
+        </style>
     </body>
 </html>

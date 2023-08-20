@@ -16,15 +16,19 @@
     <script src="js/parse.js"></script>
 </head>
 <body>
+    <div class="bar">
+        <img src="img/logo.png" alt="logo" class="logo-image">
+        <h3 style="direction: rtl;" id="welcome"></h3>
+    </div>
     <h2>מקצועות החובה</h2>
     <div class="flex-div">
-        <div id="req-missing-display" style="color: white; text-align: right; direction: rtl;">
+        <div id="req-missing-display" style="text-align: right; direction: rtl;">
             <h3>קורסים חסרים</h3>
-            <ul id="req-missing-list"></ul>
+            <table id="req-missing-list"><thead><tr><td>מס' מקצוע</td><td>שם מקצוע</td><td></td><td>נק'</td></tr></thead><tbody></tbody></table>
         </div>
-        <div id="req-taken-display" style="color: white; text-align: right; direction: rtl;">
+        <div id="req-taken-display" style="text-align: right; direction: rtl;">
             <h3>קורסים שלקחת</h3>
-            <ul id="req-taken-list"></ul>
+            <table id="req-taken-list"><thead><tr><td>מס' מקצוע</td><td>שם מקצוע</td><td>ציון</td><td>נק'</td></tr></thead><tbody></tbody></table>
         </div>
     </div>
     <div id="req-credits-count"></div>
@@ -32,7 +36,7 @@
     <h2>מגמות</h2> 
     <div id="container"></div>
     <div class="flex-div">
-        <div id="major-courses" style="color: white; text-align: right; direction: rtl; display: none;">
+        <div id="major-courses" style="text-align: right; direction: rtl; display: none;">
         </div>
     </div>
     <script>
@@ -40,6 +44,18 @@
             for (let i = 0; i < array.length; i++) {
                 if (array[i][0] === courseNumber) {
                     return array[i][1].name;
+                }
+            }
+            return null; 
+        }
+
+        function getCourseCredits(array, courseNumber) {
+            for (let i = 0; i < array.length; i++) {
+                if (array[i][0] === courseNumber) {
+                    if (array[i][1].points) {
+                        return array[i][1].points;
+                    } else 
+                        return "N/A";
                 }
             }
             return null; 
@@ -95,25 +111,46 @@
             }
         }
 
+        function getGradeByCourseNumber(fullData, courseNumber) {
+            data = fullData.semesters;
+            for (let semester of data) {
+                for (let course of semester["courses"]) {
+                    if (course["course-number"] === courseNumber) {
+                        return course["grade"];
+                    }
+                }
+            }
+            data = fullData.exemptions;
+            for (let course of data) {
+                if (course["course-number"] === courseNumber) {
+                    return course["grade"];
+                }
+            }
+            return ""; // Return null if the course number is not found
+        }
+
         function getCourseNameElement(courses, courseID) {
+            console.log(parsedData)
             let courseName = getCourseName(courses, courseID);
+            let grade = getGradeByCourseNumber(parsedData, courseID);
+            let credits = getCourseCredits(courses, courseID);
             if (courseName) {
-                return `<li>[<a href="https://students.technion.ac.il/local/technionsearch/course/${courseID}" target="blank">${courseID}</a>] ${courseName}</li>`;
+                return `<tr><td><a href="https://students.technion.ac.il/local/technionsearch/course/${courseID}" target="blank">${courseID}</a></td><td>${courseName}</td><td>${grade}</td><td>${credits}</td></tr>`;
             } else {
-                return `<li>[<a href="https://students.technion.ac.il/local/technionsearch/course/${courseID}" target="blank">${courseID}</a>]</li>`;
+                return `<tr><td><a href="https://students.technion.ac.il/local/technionsearch/course/${courseID}" target="blank">${courseID}</a></td><td></td><td>${grade}</td><td>${credits}</td></tr>`;
                 console.log("Missing course: " + courseID);
             }    
         }
 
         function displayRequired(courses, reqTaken, reqMissing) {
             // Display courses taken
-            let reqTakenList = $('#req-taken-list')[0];
+            let reqTakenList = $('#req-taken-list > tbody')[0];
             reqTakenList.innerHTML = '';
             for (let i in reqTaken) {
                 reqTakenList.innerHTML += getCourseNameElement(courses, reqTaken[i]);
             }
             // Display courses missing
-            let reqMissingList = $('#req-missing-list')[0];
+            let reqMissingList = $('#req-missing-list > tbody')[0];
             reqMissingList.innerHTML = '';
             for (let i in reqMissing) {
                 reqMissingList.innerHTML += getCourseNameElement(courses, reqMissing[i]);
@@ -129,7 +166,7 @@
 
                 for (let i = 0; i < majors[facID].length; i++) {
                     let btn = document.createElement('button');
-                    btn.className = 'btn btn-primary mr-2'; // Add Bootstrap classes
+                    btn.className = 'btn btn-outline-primary mr-2'; // Add Bootstrap classes
                     btn.id = 'btn' + (i + 1);
                     btn.innerText = majors[facID][i].name;
                     btn.onclick = function() {
@@ -142,7 +179,7 @@
 
         function displayMajor(courses, major) {
             let majorContainer = $('#major-courses');
-            let ulElement = $('<ul></ul>');
+            let ulElement = $('<table><tbody></tbody></table>');
 
             majorContainer.html('');
             majorContainer.show();
@@ -157,7 +194,7 @@
             for (let j = 0; j < major.conditional.length; j++) {
                 if (major.conditional[j].condition == "minimum") {
                     majorContainer.append("<h3>לפחות " + (major.conditional[j].value).toString() + " מהרשימה</h3>")
-                    let ulElement = $('<ul></ul>');
+                    let ulElement = $('<table><tbody></tbody></table>');
                     for (let k = 0; k < major.conditional[j].courses.length; k++) {
                         courseEl = getCourseNameElement(courses, major.conditional[j].courses[k]["course-number"]);
                         ulElement.append(courseEl);                       
@@ -169,11 +206,17 @@
         }
 
         function toggleButtons(courses, buttonId, major) {
-            // const container = document.getElementById('container');
-            // const buttons = container.getElementsByTagName('button');
-            // for (let i = 0; i < buttons.length; i++) {
-            //     buttons[i].disabled = buttons[i].id !== buttonId;
-            // }
+            const container = document.getElementById('container');
+            const buttons = container.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].id !== buttonId) {
+                    buttons[i].classList.remove('btn-primary');
+                    buttons[i].classList.add('btn-outline-primary');
+                } else {
+                    buttons[i].classList.remove('btn-outline-primary');
+                    buttons[i].classList.add('btn-primary');
+                }
+            }
             displayMajor(courses, major);
         }
 
@@ -295,6 +338,8 @@
             $("#req-credits-count").html("מקצועות חובה: " + "<b>" + credits.toString() + "/111.5</b>");
             pickMajor(courses, parsedData, faculties, majors)
         });
+
+        $("#welcome").html("היי " + parsedData["student-name"]);
     </script>
 </body>
 </html>
