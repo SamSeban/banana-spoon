@@ -18,13 +18,16 @@
     background: rgba(255,255,255,1);
   }
 
-  .bg {
+  .flex-div {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+  }
+  .bg {
     background: linear-gradient(to top right, #4b6cb7, #182848);
     color: white;
+    text-align: center;
   }
 
 .transparent-input {

@@ -1,21 +1,32 @@
 function parseTranscript(text) {
     const lines = text.split('\n');
+    const seenCourses = new Set();
 
     function findLineContains(label) {
         return lines.find(line => line.includes(label));
     }
 
-    function extractCourses(startIndex, endIndex) {
+    function extractCourses(startIndex, endIndex, seenCourses) {
         return lines.slice(startIndex, endIndex).map(line => {
-        const parts = line.split('\t');
-        return {
-            "course-number": parts[0].trim(),
-            "course-name": parts[1].trim(),
-            "credits": parts[2].trim(),
-            "grade": parts[3].trim()
-        };
-        });
+            const parts = line.split('\t');
+            const courseNumber = parts[0].trim();
+            const grade = parts[3].trim();
+            if (seenCourses.has(courseNumber) || grade === 'לא השלים' || grade.includes('*')) {
+                return null;
+            }
+            if (!isNaN(grade) && parseInt(grade, 10) < 55) {
+                return null;
+            }
+            seenCourses.add(courseNumber);
+            return {
+                "course-number": courseNumber,
+                "course-name": parts[1].trim(),
+                "credits": parts[2].trim(),
+                "grade": grade
+            };
+        }).filter(course => course !== null);
     }
+    
 
     const studentNameLine = findLineContains("שם מלא:");
     const studentName = studentNameLine.split('\t')[1];
@@ -42,7 +53,7 @@ function parseTranscript(text) {
     const exemptionsEndIndex = (lines.findIndex(function(item){
         return item.indexOf("סה\"כ נקודות זיכוי:")!==-1;
     }));
-    const exemptions = extractCourses(exemptionsStartIndex, exemptionsEndIndex);
+    const exemptions = extractCourses(exemptionsStartIndex, exemptionsEndIndex, seenCourses);
 
     const semesters = [];
     let currentIndex = 0;
@@ -56,7 +67,7 @@ function parseTranscript(text) {
             const coursesEndIndex = (lines.slice(coursesStartIndex).findIndex(function(item){
                 return item.indexOf("נקודות")!==-1;
             })) + coursesStartIndex;
-            const courses = extractCourses(coursesStartIndex, coursesEndIndex);
+            const courses = extractCourses(coursesStartIndex, coursesEndIndex, seenCourses);
             
             semesters.push({
                 "semester-name": semesterName,
